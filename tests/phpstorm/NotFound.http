@@ -1,0 +1,11 @@
+### Sucess test
+GET {{host}}/not-found
+Content-Type: application/json
+
+> {%
+client.test('Not found message', function(){
+    client.assert(response.status === 404, 'Response status is not 404');
+    client.assert(response.body.hasOwnProperty('code'), 'Cannot find "code" in response');
+    client.assert(response.body.hasOwnProperty('message'), 'Cannot find "message" in response');
+})
+ %}

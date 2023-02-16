@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    ports:
+      - "${PORT:-8080}:80"
+    volumes:
+      - "./src:/var/www/src"
+      - "./public:/var/www/html"
+      - "./routes:/var/www/routes"
+      - "./vendor:/var/www/vendor"
+  composer:
+    image: "composer:2.5.1"
+    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
+    volumes:
+      - ".:/app"
+      - "${COMPOSER_CACHE:-cache-composer}:/composer"
+
+  tests:
+    image: "php:8.2.1-cli"
+    user: "${USER_ID:-1000}:${GROUP_ID:-1000}"
+    volumes:
+      - .:/project
+    working_dir: /project
+    entrypoint: vendor/bin/phpunit
+
+volumes:
+  cache-composer:
+    name: cache-composer
+    external: true
